@@ -211,7 +211,7 @@ class Message implements MessageInterface {
 	    }
 
 	    $header = $this -> getHeader($name);
-	    $this -> setHeader($name, array_merge($header,$value));
+	    $this -> setHeader($name, array_merge($header, $value));
 	}
 
 	/**

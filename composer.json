@@ -9,7 +9,8 @@
     "require": {
         "almendra/validators": "dev-master",
         "illuminate/support": "^5.3",
-        "filp/whoops": "^2.1"
+        "filp/whoops": "^2.1",
+        "psr/http-message": "^1.0"
     },
     "minimum-stability": "dev"
 }
