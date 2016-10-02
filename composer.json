@@ -3,7 +3,7 @@
     "version": "master",
     "autoload": {
         "psr-4" : {
-            "Almendra\\" : "src/"
+            "Almendra\\Http\\" : "src/"
         }
     },
     "require": {
