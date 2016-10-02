@@ -3,12 +3,14 @@
     "version": "master",
     "autoload": {
         "psr-4" : {
-            "Almendra\\Http\\" : "src/"
+            "Almendra\\" : "src/"
         }
     },
     "require": {
-        "almendra/validators": "dev-master",
-        "psr/http-message": "^1.0"
+        "ringcentral/psr7": "^1.2",
+        "guzzlehttp/psr7": "^1.3",
+        "filp/whoops": "^2.1",
+        "almendra/validators": "dev-master"
     },
     "minimum-stability": "dev"
 }
