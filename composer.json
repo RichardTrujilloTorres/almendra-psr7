@@ -1,0 +1,14 @@
+{
+    "name": "almendra/psr7",
+    "version": "master",
+    "autoload": {
+        "psr-4" : {
+            "Almendra\\Http\\" : "src/"
+        }
+    },
+    "require": {
+        "almendra/validators": "dev-master",
+        "psr/http-message": "^1.0"
+    },
+    "minimum-stability": "dev"
+}
