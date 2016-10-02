@@ -5,3 +5,4 @@ composer.json.bup
 composer.lock
 TODO.md
 CHANGELOG.md
+.gitignore
