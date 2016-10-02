@@ -7,7 +7,9 @@
         }
     },
     "require": {
-        "almendra/validators": "dev-master"
+        "almendra/validators": "dev-master",
+        "illuminate/support": "^5.3",
+        "filp/whoops": "^2.1"
     },
     "minimum-stability": "dev"
 }
