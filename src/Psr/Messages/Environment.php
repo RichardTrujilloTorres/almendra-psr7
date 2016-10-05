@@ -1,17 +1,16 @@
 <?php
 
 namespace Almendra\Http\Psr\Messages;
- 
+
 use Almendra\Http\Collection;
 use Almendra\Http\Psr\Interfaces\EnvironmentInterface;
 
 use Almendra\Http\Helpers\URI as URIHelper;
 
-
 /**
  * Represents the message environment.
  *
- * @package Almendra\Http    
+ * @package Almendra\Http
  */
 class Environment extends Collection implements EnvironmentInterface
 {
@@ -21,7 +20,8 @@ class Environment extends Collection implements EnvironmentInterface
      * @param  array $userData Array of custom environment keys and values
      * @return array
      */
-    public static function mock(array $userData = []) {
+    public static function mock(array $userData = [])
+    {
         $data = array_merge([
             'SERVER_PROTOCOL'      => 'HTTP/1.1',
             'REQUEST_METHOD'       => 'GET',
@@ -49,7 +49,8 @@ class Environment extends Collection implements EnvironmentInterface
      * @param  array $userData Array of custom environment keys and values
      * @return array
      */
-    public static function init(array $userData = []) {
+    public static function init(array $userData = [])
+    {
         // @todo determine assignments individually
         $data = array_merge([
             'SERVER_PROTOCOL'      => 'HTTP/1.1',
@@ -73,12 +74,12 @@ class Environment extends Collection implements EnvironmentInterface
         return $data;
     }
 
-    public static function getServerValue($value, $default = '') {
+    public static function getServerValue($value, $default = '')
+    {
         if (array_key_exists($value, $_SERVER)) {
             return $_SERVER[$value];
         }
 
         return $default;
     }
-    
 }

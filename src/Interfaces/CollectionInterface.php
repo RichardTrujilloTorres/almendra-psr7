@@ -6,7 +6,8 @@ namespace Almendra\Http\Interfaces;
 /**
  * Collection Interface
  */
-interface CollectionInterface extends \ArrayAccess, \Countable, \IteratorAggregate {
+interface CollectionInterface extends \ArrayAccess, \Countable, \IteratorAggregate
+{
     public function set($key, $value);
 
     public function get($key, $default = null);

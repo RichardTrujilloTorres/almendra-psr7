@@ -3,7 +3,6 @@
 
 namespace Almendra\Http;
 
-
 use Almendra\Http\Interfaces\CollectionInterface;
 
 use ArrayIterator;

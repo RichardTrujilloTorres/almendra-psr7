@@ -10,16 +10,17 @@ use Almendra\Http\Psr\Messages\Stream;
 /**
  * Represents a response
  *
- * @package Almendra\Http	
+ * @package Almendra\Http
  */
-class Response extends Message implements ResponseInterface {
-	
+class Response extends Message implements ResponseInterface
+{
+    
 
-	/**
-	* HTTP Response codes.
-	*
-	*/
-	const HTTP_CONTINUE = 100;
+    /**
+    * HTTP Response codes.
+    *
+    */
+    const HTTP_CONTINUE = 100;
     const HTTP_SWITCHING_PROTOCOLS = 101;
     const HTTP_PROCESSING = 102;            // RFC2518
     const HTTP_OK = 200;
@@ -90,7 +91,7 @@ class Response extends Message implements ResponseInterface {
      */
     protected static $_messages = [
 
-    	/* Information */
+        /* Information */
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
@@ -166,55 +167,62 @@ class Response extends Message implements ResponseInterface {
     ];
 
     /**
-     * @var int Status code 
+     * @var int Status code
      */
     protected $_code = self::HTTP_OK;
 
     /**
-     * @var string Reason phrase 
+     * @var string Reason phrase
      */
-	protected $_reasonPhrase;
+    protected $_reasonPhrase;
 
 
-	public function __construct(StreamInterface $body = null) {
-		$this -> _body = $body;
+    public function __construct(StreamInterface $body = null)
+    {
+        $this -> _body = $body;
 
-		return true;
-	}
+        return true;
+    }
 
-	public function __toString() {
-		// transform the stream to a string
-		$body = $this -> getBody() -> __toString();
+    public function __toString()
+    {
+        // transform the stream to a string
+        $body = $this -> getBody() -> __toString();
 
-		return $body;
-	}
+        return $body;
+    }
 
-	// public function toJson(StreamInterface $body = null) {
-	// 	$body = json_encode($body, JSON_PRETTY_PRINT);
-	// 	return $this -> withBody($body);
-	// }
+    // public function toJson(StreamInterface $body = null) {
+    // 	$body = json_encode($body, JSON_PRETTY_PRINT);
+    // 	return $this -> withBody($body);
+    // }
 
-	public function getStatusCode() {
-		return $this -> _code;
-	}
+    public function getStatusCode()
+    {
+        return $this -> _code;
+    }
 
-	public function withStatus($code, $reasonPhrase = '') {
-		$clone = clone $this;
-		$clone -> _code = $code;
-		$clone -> _reasonPhrase = $reasonPhrase;
+    public function withStatus($code, $reasonPhrase = '')
+    {
+        $clone = clone $this;
+        $clone -> _code = $code;
+        $clone -> _reasonPhrase = $reasonPhrase;
 
-		return $clone;
-	}
+        return $clone;
+    }
 
-	public function getReasonPhrase() {
-		return $this -> _reasonPhrase;
-	}
+    public function getReasonPhrase()
+    {
+        return $this -> _reasonPhrase;
+    }
 
-	public static function getMessages() {
-		return self::$_messages;
-	}
+    public static function getMessages()
+    {
+        return self::$_messages;
+    }
 
-	public static function getMessage($code) {
-		return self::$_messages[$code];
-	}
+    public static function getMessage($code)
+    {
+        return self::$_messages[$code];
+    }
 }
