@@ -74,7 +74,7 @@ class Uri implements UriInterface
         }
 
         $this -> _uri = $uri;
-        $this -> _query = URIHelper::getQueryParams($uri);
+        $this -> setQuery(URIHelper::getQueryParams($uri));
         $this -> setPath();
         $this -> setFragment();
         $this -> setUser($this -> getUsername());
@@ -424,6 +424,10 @@ class Uri implements UriInterface
 
     public function setQuery($query)
     {
+        if (!is_string($query)) {
+            throw new \InvalidArgumentException("Query must be a string.");
+        }
+
         $this -> _query = $query;
     }
 

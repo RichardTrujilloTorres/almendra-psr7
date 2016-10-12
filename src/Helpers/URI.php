@@ -9,8 +9,9 @@ class URI
     /**
      * Retrieve the parameters from the URI
      *
-     * @param type name 		description
-     * @return type 				description
+     * @param string $uri 		    The URI
+     * @param boolean $serialized   It's to be serialized?
+     * @return mixed 				
      */
     public static function getQueryParams($uri, $serialized = true)
     {
@@ -63,7 +64,7 @@ class URI
     /**
      * Serializes the query params
      *
-     * @param array $params 		The query params
+     * @param array $queryParams 		The query params
      * @return string
      */
     public static function serializeQueryParams(array $queryParams)
