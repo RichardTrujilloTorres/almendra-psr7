@@ -4,6 +4,7 @@ namespace Almendra\Http\Psr\Messages;
 
 use Almendra\Http\Collection;
 use Almendra\Http\Psr\Interfaces\EnvironmentInterface;
+use Almendra\Http\Server;
 
 /**
  * Represents the message environment.
@@ -51,32 +52,22 @@ class Environment extends Collection implements EnvironmentInterface
     {
         $data = array_merge([
             'SERVER_PROTOCOL'      => 'HTTP/1.1',
-            'REQUEST_METHOD'       => $_SERVER['REQUEST_METHOD'],
-            'SCRIPT_NAME'          => $_SERVER['SCRIPT_NAME'],
-            'REQUEST_URI'          => $_SERVER['REQUEST_URI'],
-            // 'QUERY_STRING'         => URIHelper::getQueryParams($_SERVER['REQUEST_URI']),
-            'QUERY_STRING'         => self::getServerValue('QUERY_STRING'),
-            'SERVER_NAME'          => $_SERVER['SERVER_NAME'],
-            'SERVER_PORT'          => $_SERVER['SERVER_PORT'],
-            'HTTP_HOST'            => $_SERVER['HTTP_HOST'],
-            'HTTP_ACCEPT'          => $_SERVER['HTTP_ACCEPT'],
-            'HTTP_ACCEPT_LANGUAGE' => self::getServerValue('HTTP_ACCEPT_LANGUAGE', 'en'),
-            'HTTP_ACCEPT_CHARSET'  => self::getServerValue('HTTP_ACCEPT_CHARSET', 'ISO-8859-1,utf-8;q=0.7,*;q=0.3'),
-            'HTTP_USER_AGENT'      => $_SERVER['HTTP_USER_AGENT'],
-            'REMOTE_ADDR'          => self::getServerValue('REMOTE_ADDR'),
+            'REQUEST_METHOD'       => Server::getValue('REQUEST_METHOD'),
+            'SCRIPT_NAME'          => Server::getValue('SCRIPT_NAME'),
+            'REQUEST_URI'          => Server::getValue('REQUEST_URI'),
+            'QUERY_STRING'         => Server::getValue('QUERY_STRING'),
+            'SERVER_NAME'          => Server::getValue('SERVER_NAME'),
+            'SERVER_PORT'          => Server::getValue('SERVER_PORT'),
+            'HTTP_HOST'            => Server::getValue('HTTP_HOST'),
+            'HTTP_ACCEPT'          => Server::getValue('HTTP_ACCEPT'),
+            'HTTP_ACCEPT_LANGUAGE' => Server::getValue('HTTP_ACCEPT_LANGUAGE', 'en'),
+            'HTTP_ACCEPT_CHARSET'  => Server::getValue('HTTP_ACCEPT_CHARSET', 'ISO-8859-1,utf-8;q=0.7,*;q=0.3'),
+            'HTTP_USER_AGENT'      => Server::getValue('HTTP_USER_AGENT'),
+            'REMOTE_ADDR'          => Server::getValue('REMOTE_ADDR'),
             'REQUEST_TIME'         => time(),
             'REQUEST_TIME_FLOAT'   => microtime(true),
         ], $userData);
 
         return $data;
-    }
-
-    public static function getServerValue($value, $default = '')
-    {
-        if (array_key_exists($value, $_SERVER)) {
-            return $_SERVER[$value];
-        }
-
-        return $default;
     }
 }
