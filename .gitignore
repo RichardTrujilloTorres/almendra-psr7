@@ -1,5 +1,6 @@
 /vendor
 /public
 /bootstrap
-composer.json
 composer.lock
+NOTES.md
+TODO.md
