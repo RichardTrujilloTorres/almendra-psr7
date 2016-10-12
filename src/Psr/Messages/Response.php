@@ -3,9 +3,7 @@
 namespace Almendra\Http\Psr\Messages;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\StreamInterface;
-use Almendra\Http\Psr\Messages\Stream;
 
 /**
  * Represents a response
