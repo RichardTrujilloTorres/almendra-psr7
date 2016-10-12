@@ -7,6 +7,12 @@ use Psr\Http\Message\UriInterface;
 use Almendra\Http\Helpers\URI as URIHelper;
 use Almendra\Http\Server;
 
+/**
+ * Represents an URI.
+ *
+ * @package Almendra\Psr7    
+ * @author     Richard Trujillo Torres     <richard.trujillo.torres@gmail.com>
+ */
 class Uri implements UriInterface
 {
     /**
@@ -47,7 +53,7 @@ class Uri implements UriInterface
     /**
      * @var string The URI's specified user
      */
-    protected $_user;
+    protected $_username;
 
     /**
      * @var string The URI's specified password
@@ -71,11 +77,7 @@ class Uri implements UriInterface
         $this -> _query = URIHelper::getQueryParams($uri);
         $this -> setPath();
         $this -> setFragment();
-        // scheme
-        // $this -> setScheme();
-        // ...
-
-        return true;
+        $this -> setUser($this -> getUsername());
     }
 
     /**
@@ -115,8 +117,13 @@ class Uri implements UriInterface
      */
     public function getUserInfo()
     {
-        $userInfo = '';
-        return $this -> getUsername() . ':' . $this -> getPassword();
+        $userInfo = $this -> getUsername();
+        $password = $this -> getPassword();
+        if ('' !== $userInfo && '' !== $password) {
+            $userInfo .= ':' . $password;
+        }
+
+        return $userInfo;
     }
 
     /**
@@ -127,8 +134,8 @@ class Uri implements UriInterface
     public function getUsername()
     {
         $params = URIHelper::getQueryParams($this -> _uri, false);
-        if (array_key_exists('user', $params)) {
-            return $params['user'];
+        if (array_key_exists('username', $params)) {
+            return $params['username'];
         }
 
         return '';
@@ -199,15 +206,32 @@ class Uri implements UriInterface
         $this -> _path = $path;
     }
 
-
-
     /**
-     * Retrieves the query string from the URI.
+     * Retrieve the query string of the URI.
      *
-     * @return string
+     * If no query string is present, this method MUST return an empty string.
+     *
+     * The leading "?" character is not part of the query and MUST NOT be
+     * added.
+     *
+     * The value returned MUST be percent-encoded, but MUST NOT double-encode
+     * any characters. To determine what characters to encode, please refer to
+     * RFC 3986, Sections 2 and 3.4.
+     *
+     * As an example, if a value in a key/value pair of the query string should
+     * include an ampersand ("&") not intended as a delimiter between values,
+     * that value MUST be passed in encoded form (e.g., "%26") to the instance.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-2
+     * @see https://tools.ietf.org/html/rfc3986#section-3.4
+     * @return string The URI query string.
      */
     public function getQuery()
     {
+        if (isset($this -> _query) && null !== $this -> _query) {
+            return $this -> _query;
+        }
+
         $query = Server::getValue('QUERY_STRING');
 
         // if not defined, attempt to resolve it
@@ -230,11 +254,28 @@ class Uri implements UriInterface
         return $this -> _fragment;
     }
 
-    protected function setFragment()
+    protected function setFragment($fragment = null)
     {
-        $this -> _fragment = URIHelper::getQueryFragment($this -> _uri);
+        $this -> _fragment = (isset($fragment) && null !== $fragment) ?
+            $this -> _fragment = $fragment :
+            $this -> _fragment = URIHelper::getQueryFragment($this -> _uri);
     }
 
+    /**
+     * Return an instance with the specified scheme.
+     *
+     * This method MUST retain the state of the current instance, and return
+     * an instance that contains the specified scheme.
+     *
+     * Implementations MUST support the schemes "http" and "https" case
+     * insensitively, and MAY accommodate other schemes if required.
+     *
+     * An empty scheme is equivalent to removing the scheme.
+     *
+     * @param string $scheme The scheme to use with the new instance.
+     * @return static A new instance with the specified scheme.
+     * @throws \InvalidArgumentException for invalid or unsupported schemes.
+     */
     public function withScheme($scheme)
     {
         $clone = clone $this;
@@ -245,11 +286,23 @@ class Uri implements UriInterface
 
     protected function setScheme($scheme)
     {
-        // @todo validate scheme
         $this -> _scheme = $scheme;
     }
 
-
+    /**
+     * Return an instance with the specified user information.
+     *
+     * This method MUST retain the state of the current instance, and return
+     * an instance that contains the specified user information.
+     *
+     * Password is optional, but the user information MUST include the
+     * user; an empty string for the user is equivalent to removing user
+     * information.
+     *
+     * @param string $user The user name to use for authority.
+     * @param null|string $password The password associated with $user.
+     * @return static A new instance with the specified user information.
+     */
     public function withUserInfo($user, $password = null)
     {
         $clone = clone $this;
@@ -261,7 +314,7 @@ class Uri implements UriInterface
 
     protected function setUser($user)
     {
-        $this -> _user = $user;
+        $this -> _username = $user;
     }
 
     protected function setPassword($password)
@@ -269,6 +322,18 @@ class Uri implements UriInterface
         $this -> _password = $password;
     }
 
+    /**
+     * Return an instance with the specified host.
+     *
+     * This method MUST retain the state of the current instance, and return
+     * an instance that contains the specified host.
+     *
+     * An empty host value is equivalent to removing the host.
+     *
+     * @param string $host The hostname to use with the new instance.
+     * @return static A new instance with the specified host.
+     * @throws \InvalidArgumentException for invalid hostnames.
+     */
     public function withHost($host)
     {
         $clone = clone $this;
@@ -277,14 +342,71 @@ class Uri implements UriInterface
         return $clone;
     }
 
+    /**
+     * Return an instance with the specified port.
+     *
+     * This method MUST retain the state of the current instance, and return
+     * an instance that contains the specified port.
+     *
+     * Implementations MUST raise an exception for ports outside the
+     * established TCP and UDP port ranges.
+     *
+     * A null value provided for the port is equivalent to removing the port
+     * information.
+     *
+     * @param null|int $port The port to use with the new instance; a null value
+     *     removes the port information.
+     * @return static A new instance with the specified port.
+     * @throws \InvalidArgumentException for invalid ports.
+     */
     public function withPort($port)
     {
-        return true;
+        $clone = clone $this;
+        if (!URIHelper::isPortValid($port)) {
+            throw new \InvalidArgumentException("Invalid port. The port must be within the TCP and UDP port ranges.");
+        }
+
+        $clone -> setPort($port);
+
+        return $clone;
     }
 
+    protected function setPort($port) {
+        $this -> _port = $port;
+    }
+
+    /**
+     * Return an instance with the specified path.
+     *
+     * This method MUST retain the state of the current instance, and return
+     * an instance that contains the specified path.
+     *
+     * The path can either be empty or absolute (starting with a slash) or
+     * rootless (not starting with a slash). Implementations MUST support all
+     * three syntaxes.
+     *
+     * If the path is intended to be domain-relative rather than path relative then
+     * it must begin with a slash ("/"). Paths not starting with a slash ("/")
+     * are assumed to be relative to some base path known to the application or
+     * consumer.
+     *
+     * Users can provide both encoded and decoded path characters.
+     * Implementations ensure the correct encoding as outlined in getPath().
+     *
+     * @param string $path The path to use with the new instance.
+     * @return static A new instance with the specified path.
+     * @throws \InvalidArgumentException for invalid paths.
+     */
     public function withPath($path)
     {
-        return true;
+        $clone = clone $this;
+        if (!URIHelper::isPathValid($path)) {
+            throw new \InvalidArgumentException("Invalid path.");
+        }
+
+        $clone -> setPath($path);
+
+        return $clone;
     }
 
     public function withQuery($query)
@@ -306,7 +428,10 @@ class Uri implements UriInterface
 
     public function withFragment($fragment)
     {
-        return true;
+        $clone = clone $this;
+        $clone -> setFragment($fragment);
+
+        return $clone;
     }
 
     public function __toString()

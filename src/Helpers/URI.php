@@ -2,6 +2,9 @@
 
 namespace Almendra\Http\Helpers;
 
+// use Almendra\Http\Psr\Messages\Uri as PsrUri;
+use Psr\Http\Message\UriInterface as PsrUri;
+
 class URI
 {
     /**
@@ -87,9 +90,7 @@ class URI
         }
 
         $params = self::deserializeQueryParams($params);
-        // @todo match against verificator
-        // dd(self::validator());
-
+        
         return true;
     }
 
@@ -110,18 +111,15 @@ class URI
             return false;
         }
 
-        // more checks?
-
         return true;
     }
 
     public static function isValid($uri)
     {
-        if (!is_string($uri)) {
+        if (!($uri instanceof PsrUri) && !is_string($uri)) {
             return false;
         }
 
-        // more validation
         return true;
     }
 
@@ -133,9 +131,27 @@ class URI
      */
     public static function getQueryFragment($uri)
     {
-        // @todo
-
         return null;
+    }
+
+    /**
+     * Validates a port within TCP and UDP ranges.
+     *
+     * @param string $port         The port
+     * @return boolean                 
+     */
+    public static function isPortValid($port) {
+        return true;
+    }
+
+    /**
+     * Validates a path.        
+     *
+     * @param string $path         The path
+     * @return boolean                 
+     */
+    public static function isPathValid($path) {
+        return true;
     }
 
     // @todo $validator = new Validator::make($rules);

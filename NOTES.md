@@ -15,5 +15,6 @@ Ora uso questo, vorrei evitare
 
 
 Investigate:
-	scheme
-	fragment
+	[]		scheme
+	[x] 	fragment 
+	[]		stream

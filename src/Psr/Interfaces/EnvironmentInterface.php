@@ -11,4 +11,6 @@ namespace Almendra\Http\Psr\Interfaces;
 interface EnvironmentInterface
 {
     public static function init(array $settings = []);
+
+    public static function mock(array $settings = []);
 }

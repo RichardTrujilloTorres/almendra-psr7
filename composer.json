@@ -6,6 +6,11 @@
             "Almendra\\Http\\" : "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4" : {
+            "Test\\" : "tests/"
+        }
+    },
     "require": {
         "almendra/validators": "dev-master",
         "illuminate/support": "^5.3",

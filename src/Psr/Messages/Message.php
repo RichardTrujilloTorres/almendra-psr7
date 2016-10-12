@@ -9,7 +9,6 @@ class Message implements MessageInterface
 {
     protected $_protocolVersion = '1.1';
 
-    // @todo use a header collection instead
     protected $_headers = [];
 
     protected $_body;
@@ -46,11 +45,11 @@ class Message implements MessageInterface
         if (isset($stream) && null !== $stream) {
             $this -> _body = $stream;
         } else {
+            // bad practice: to be remove 
             $this -> _body = new \Almendra\Http\Psr\Messages\Stream;
         }
-
-        // @todo check stream validity
     }
+    
     /**
      * Returns the message's protocol version.
      *
@@ -219,7 +218,7 @@ class Message implements MessageInterface
         }
 
         $name = strtolower($name);
-        // @todo more checks
+        
 
         return true;
     }
