@@ -4,7 +4,6 @@ namespace Almendra\Http\Psr\Messages;
 
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Psr\Http\Message\UriInterface;
-use Psr\Http\Message\Environment;
 
 class ServerRequest extends Message implements RequestInterface
 {

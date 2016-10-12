@@ -127,7 +127,7 @@ class Message implements MessageInterface
      * Returns a header.
      *
      * @param string $name 		The header's name.
-     * @return string
+     * @return array
      */
     public function getHeader($name)
     {

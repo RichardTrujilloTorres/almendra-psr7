@@ -53,7 +53,7 @@ class Stream implements StreamInterface
      */
     public function close()
     {
-        return true;
+        
     }
 
     /**
@@ -65,7 +65,7 @@ class Stream implements StreamInterface
      */
     public function detach()
     {
-        return true;
+        return null;
     }
 
     /**
@@ -86,7 +86,7 @@ class Stream implements StreamInterface
      */
     public function tell()
     {
-        return true;
+        
     }
 
     /**
@@ -186,7 +186,7 @@ class Stream implements StreamInterface
      */
     public function read($length)
     {
-        return true;
+        return '';
     }
 
     /**
@@ -198,7 +198,7 @@ class Stream implements StreamInterface
      */
     public function getContents()
     {
-        return true;
+        return '';
     }
 
     /**
@@ -231,7 +231,7 @@ class Stream implements StreamInterface
     /**
      * Sets the value of _raw.
      *
-     * @param mixed $_raw the raw
+     * @param mixed $raw the raw
      *
      * @return self
      */
@@ -255,7 +255,7 @@ class Stream implements StreamInterface
     /**
      * Sets the value of _body.
      *
-     * @param mixed $_body the body
+     * @param mixed $body the body
      *
      * @return self
      */
