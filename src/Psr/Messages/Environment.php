@@ -5,8 +5,6 @@ namespace Almendra\Http\Psr\Messages;
 use Almendra\Http\Collection;
 use Almendra\Http\Psr\Interfaces\EnvironmentInterface;
 
-use Almendra\Http\Helpers\URI as URIHelper;
-
 /**
  * Represents the message environment.
  *

@@ -2,7 +2,6 @@
 
 namespace Almendra\Http\Helpers;
 
-// use Almendra\Http\Psr\Messages\Uri as PsrUri;
 use Psr\Http\Message\UriInterface as PsrUri;
 
 class URI
@@ -156,7 +155,6 @@ class URI
         return true;
     }
 
-    // @todo $validator = new Validator::make($rules);
     public function validator()
     {
         return [

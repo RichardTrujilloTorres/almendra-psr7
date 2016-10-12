@@ -1,6 +1,6 @@
 {
     "name": "almendra/psr7",
-    "version": "master",
+    "description": "Almendra PSR7 implementation",
     "autoload": {
         "psr-4" : {
             "Almendra\\Http\\" : "src/"

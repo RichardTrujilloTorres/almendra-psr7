@@ -39,3 +39,6 @@
 
 []		In Request:
 // @todo enforce UriInterface, ServerInterface
+
+
+    // @todo $validator = new Validator::make($rules);
