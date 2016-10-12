@@ -8,8 +8,6 @@ use Almendra\Http\Psr\Messages\Environment;
 
 use Almendra\Http\Server;
 
-use Almendra\Http\Requests\Field;
-
 /**
  * Represents an incomming request.
  * Server specific methods are left to ServerRequest.

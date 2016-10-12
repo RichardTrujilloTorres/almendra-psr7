@@ -1,6 +1,7 @@
 {
     "name": "almendra/psr7",
     "description": "Almendra PSR7 implementation",
+    "license": "MIT",
     "autoload": {
         "psr-4" : {
             "Almendra\\Http\\" : "src/"

@@ -49,7 +49,6 @@ class Environment extends Collection implements EnvironmentInterface
      */
     public static function init(array $userData = [])
     {
-        // @todo determine assignments individually
         $data = array_merge([
             'SERVER_PROTOCOL'      => 'HTTP/1.1',
             'REQUEST_METHOD'       => $_SERVER['REQUEST_METHOD'],
