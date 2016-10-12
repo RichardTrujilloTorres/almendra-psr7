@@ -9,9 +9,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      *
      * Returns null
      */
-    public function it_returns_null() {
-           
-    }    
-
-
+    public function it_returns_null()
+    {
+    }
 }

@@ -138,19 +138,21 @@ class URI
      * Validates a port within TCP and UDP ranges.
      *
      * @param string $port         The port
-     * @return boolean                 
+     * @return boolean
      */
-    public static function isPortValid($port) {
+    public static function isPortValid($port)
+    {
         return true;
     }
 
     /**
-     * Validates a path.        
+     * Validates a path.
      *
      * @param string $path         The path
-     * @return boolean                 
+     * @return boolean
      */
-    public static function isPathValid($path) {
+    public static function isPathValid($path)
+    {
         return true;
     }
 

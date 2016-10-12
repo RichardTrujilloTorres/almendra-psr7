@@ -10,7 +10,7 @@ use Almendra\Http\Server;
 /**
  * Represents an URI.
  *
- * @package Almendra\Psr7    
+ * @package Almendra\Psr7
  * @author     Richard Trujillo Torres     <richard.trujillo.torres@gmail.com>
  */
 class Uri implements UriInterface
@@ -371,7 +371,8 @@ class Uri implements UriInterface
         return $clone;
     }
 
-    protected function setPort($port) {
+    protected function setPort($port)
+    {
         $this -> _port = $port;
     }
 

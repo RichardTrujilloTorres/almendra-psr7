@@ -171,7 +171,7 @@ class Request extends Message implements RequestInterface
         // retrieve the target
         $target = ('' != $this -> getUri() -> getPath()) ?
             $this -> getUri() -> getPath() :
-            '/'; 
+            '/';
 
         // attach the query parameters
         $params = $this -> getUri() -> getQuery();

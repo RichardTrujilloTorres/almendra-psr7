@@ -45,7 +45,7 @@ class Message implements MessageInterface
         if (isset($stream) && null !== $stream) {
             $this -> _body = $stream;
         } else {
-            // bad practice: to be remove 
+            // bad practice: to be remove
             $this -> _body = new \Almendra\Http\Psr\Messages\Stream;
         }
     }
