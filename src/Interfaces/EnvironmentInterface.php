@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Almendra\Http\Psr\Interfaces;
+namespace Almendra\Http\Interfaces;
 
 /**
  * Environment Interface

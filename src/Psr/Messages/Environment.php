@@ -3,7 +3,7 @@
 namespace Almendra\Http\Psr\Messages;
 
 use Almendra\Http\Collection;
-use Almendra\Http\Psr\Interfaces\EnvironmentInterface;
+use Almendra\Http\Interfaces\EnvironmentInterface;
 use Almendra\Http\Server;
 
 /**

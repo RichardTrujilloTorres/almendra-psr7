@@ -11,7 +11,7 @@ class URI
      *
      * @param string $uri 		    The URI
      * @param boolean $serialized   It's to be serialized?
-     * @return mixed 				
+     * @return mixed
      */
     public static function getQueryParams($uri, $serialized = true)
     {

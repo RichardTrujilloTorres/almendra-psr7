@@ -10,8 +10,8 @@ use Almendra\Http\Server;
 /**
  * Represents an URI.
  *
- * @package Almendra\Psr7
- * @author     Richard Trujillo Torres     <richard.trujillo.torres@gmail.com>
+ * @package     Almendra\Psr7
+ * @author      Richard Trujillo Torres     <richard.trujillo.torres@gmail.com>
  */
 class Uri implements UriInterface
 {
@@ -361,11 +361,11 @@ class Uri implements UriInterface
      */
     public function withPort($port)
     {
-        $clone = clone $this;
         if (!URIHelper::isPortValid($port)) {
             throw new \InvalidArgumentException("Invalid port. The port must be within the TCP and UDP port ranges.");
         }
-
+        
+        $clone = clone $this;
         $clone -> setPort($port);
 
         return $clone;

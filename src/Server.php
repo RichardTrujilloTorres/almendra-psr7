@@ -7,7 +7,7 @@ use Almendra\Http\Interfaces\ServerInterface;
 class Server implements ServerInterface
 {
     /**
-     * Retrieves a value define in the superglobal $_SERVER.
+     * Retrieves a value defined in the superglobal $_SERVER.
      *
      * @param string $value 		The key's name.
      * @return string|mixed
@@ -20,6 +20,18 @@ class Server implements ServerInterface
 
         return $default;
     }
+
+    /**
+     * Retrieves all values defined in the superglobal $_SERVER.
+     *
+     * @param string $value         The key's name.
+     * @return string|mixed
+     */
+    public static function getValues()
+    {
+        //
+    }
+
 
     public function get()
     {

@@ -5,12 +5,20 @@ namespace Almendra\Http\Interfaces;
 interface ServerInterface
 {
     /**
-     * Retrieves a value define in the superglobal $_SERVER.
+     * Retrieves a value defined in the superglobal $_SERVER.
      *
-     * @param string $value 		The key's name.
+     * @param string $value         The key's name.
      * @return string|mixed
      */
     public static function getValue($value, $default = '');
+
+    /**
+     * Retrieves all values defined in the superglobal $_SERVER.
+     *
+     * @param string $value         The key's name.
+     * @return string|mixed
+     */
+    public static function getValues();
 
     public function get();
 

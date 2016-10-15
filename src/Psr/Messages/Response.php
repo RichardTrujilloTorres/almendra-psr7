@@ -12,8 +12,6 @@ use Psr\Http\Message\StreamInterface;
  */
 class Response extends Message implements ResponseInterface
 {
-    
-
     /**
     * HTTP Response codes.
     *
@@ -225,9 +223,15 @@ class Response extends Message implements ResponseInterface
     {
         $clone = clone $this;
         $clone -> _code = $code;
-        $clone -> _reasonPhrase = $reasonPhrase;
+        $clone -> setReasonPhrase($reasonPhrase);
 
         return $clone;
+    }
+
+    protected function setReasonPhrase($reasonPhrase) {
+        $this -> _reasonPhrase = $reasonPhrase;
+
+        return $this;
     }
 
     /**

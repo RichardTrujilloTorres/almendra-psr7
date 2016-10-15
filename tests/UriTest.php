@@ -7,6 +7,13 @@ use Test\DummyObject;
 
 class UriTest extends \PHPUnit_Framework_TestCase
 {
+    protected $uri;
+
+    public function __construct()
+    {
+        $this->uri = new Uri;
+    }
+
     /**
      * @test
      *
@@ -14,9 +21,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function it_gets_the_proper_scheme()
     {
-        $uri = new Uri;
-
-        $this -> assertEquals($uri -> withScheme('this is a sample scheme') -> getScheme(),
+        $this -> assertEquals($this -> uri -> withScheme('this is a sample scheme') -> getScheme(),
             'this is a sample scheme');
     }
 
@@ -28,9 +33,9 @@ class UriTest extends \PHPUnit_Framework_TestCase
     public function it_returns_the_uri_as_a_string()
     {
         $uriStr = 'test uri';
-        $uri = new Uri($uriStr);
+        $newUri = new Uri($uriStr);
 
-        $this -> assertEquals($uri, $uriStr);
+        $this -> assertEquals($newUri, $uriStr);
     }
 
     /**
@@ -41,17 +46,16 @@ class UriTest extends \PHPUnit_Framework_TestCase
     public function it_returns_the_specified_uri_fragment()
     {
         $fragment = 'some test fragment here';
-        $uri = new Uri();
-        $newUri = $uri -> withFragment($fragment);
+        $newUri = $this -> uri -> withFragment($fragment);
 
         // fails
-        $this -> assertFalse($uri -> getFragment() === $fragment);
+        $this -> assertFalse($this -> uri -> getFragment() === $fragment);
 
         // passes
         $this -> assertTrue($newUri -> getFragment() === $fragment);
 
         // passes --diff instance
-        $this -> assertEquals($uri === $newUri, false);
+        $this -> assertEquals($this -> uri === $newUri, false);
     }
 
     /**
@@ -62,17 +66,16 @@ class UriTest extends \PHPUnit_Framework_TestCase
     public function it_returns_the_specified_query_string()
     {
         $query = 'some test query string here';
-        $uri = new Uri();
-        $newUri = $uri -> withQuery($query);
+        $newUri = $this -> uri -> withQuery($query);
 
         // fails
-        $this -> assertFalse($uri -> getQuery() === $query);
+        $this -> assertFalse($this -> uri -> getQuery() === $query);
 
         // passes
         $this -> assertTrue($newUri -> getQuery() === $query);
 
         // passes --diff instance
-        $this -> assertEquals($uri === $newUri, false);
+        $this -> assertEquals($this -> uri === $newUri, false);
     }
 
     /**
@@ -83,10 +86,9 @@ class UriTest extends \PHPUnit_Framework_TestCase
     public function it_validates_the_query_string()
     {
         $query = 2323; // throws \InvalidArgumentException
-        $uri = new Uri();
 
         try {
-            $newUri = $uri -> withQuery($query);
+            $newUri = $this -> uri -> withQuery($query);
         } catch (\InvalidArgumentException $e) {
             $result = true;
         }
@@ -96,7 +98,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
         // implements __toString() --throws no exception
         $queryObject = new DummyObject($query);
         try {
-            $newUri = $uri -> withQuery($query);
+            $newUri = $this -> uri -> withQuery($query);
         } catch (\InvalidArgumentException $e) {
             $result = false;
         }

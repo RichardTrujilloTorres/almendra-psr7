@@ -11,12 +11,98 @@ use Psr\Http\Message\StreamInterface;
  */
 class Stream implements StreamInterface
 {
-    protected $_raw;
-    protected $_body;
 
+    /**
+     * @var stream body / the resource
+     */
+    protected $body; 
 
-    // public function __construct() {
-    // }
+    /**
+     * @var The stream uri, if any 
+     */
+    protected $uri; 
+
+    /**
+     * @var Is the stream seekable? 
+     */
+    protected $seekable;
+
+    /**
+     * @var Is the stream readable? 
+     */
+    protected $readable;
+
+    /**
+     * @var Is the stream writable? 
+     */
+    protected $writable;
+
+    /**
+     * @var The stream metadata, if any 
+     */
+    protected $metaData = [];
+
+    /**
+     * @var The overriding options (size, uri, etc.) 
+     */
+    protected $options = [];
+
+    /**
+     * @var Default output format 
+     */
+    protected $defaultFormat; // 'JSON'
+
+    /**
+     * @var The accepted overriding options 
+     */
+    protected $overridingOptions = [
+        'size',
+        'uri',
+        ];
+
+    /**
+     * Sets up the resource. 
+     *
+     * @param resource $stream
+     * @param array $options         
+     * @return void                 
+     */
+    public function __construct($stream, $metaData = [], $options = []) {
+        if (!is_resource($stream)) {
+            throw new \InvalidArgumentException("Stream must be a resource.");
+        }
+
+        // Attach the stream
+        $this -> setBody($stream);
+        $this -> setMetadata($stream, $metaData);
+        $this -> setOptions($options);
+    }
+
+    /**
+     * Sets the stream metadata.
+     *
+     * @param resource $stream         The stream
+     * @param array $userData         The overriding user metadata
+     * @return void                 
+     */
+    protected function setMetadata($stream, array $userData = []) {
+        $meta = stream_get_meta_data($stream);
+        $this -> metaData = array_merge($meta, $userData);
+    }
+
+    /**
+     * Sets the options such as the size, effectively overriding those from the stream.
+     *
+     * @param array $options         The overriding options
+     * @return void                 
+     */
+    protected function setOptions(array $options) {
+        foreach ($this -> overridingOptions as $name) {
+            if (isset($options[$name])) {
+                $this -> $options[$name] = $options[$name];
+            }
+        }
+    }
 
     /**
      * Reads all data from the stream into a string, from the beginning to end.
@@ -34,16 +120,19 @@ class Stream implements StreamInterface
      */
     public function __toString()
     {
-        if (isset($this -> _body) && null !== $this -> _body) {
-            return json_encode($this -> _body, JSON_PRETTY_PRINT);
+        // protect against exception
+        try {
+            $this -> seek(0);
+            $result = (string) stream_get_contents($this -> getBody());
+            if ($this -> isJsonable() && ($this -> defaultFormat === 'JSON')) {
+                $result = json_encode($result, JSON_PRETTY_PRINT);
+            }
+
+        } catch (Exception $e) {
+            $result = '';
         }
 
-        return '';
-    }
-
-    public function __set($param, $value)
-    {
-        $this -> _body[$param] = $value;
+        return $result;
     }
 
     /**
@@ -53,7 +142,12 @@ class Stream implements StreamInterface
      */
     public function close()
     {
-        
+        if (!isset($this -> body)) {
+            return;
+        }
+
+        fclose($this -> body);
+        $this -> detach();
     }
 
     /**
@@ -65,7 +159,18 @@ class Stream implements StreamInterface
      */
     public function detach()
     {
-        return null;
+        if (!isset($this -> body)) {
+            return null;
+        }
+
+        $this -> options = [];
+        $this -> metaData = [];
+        $this -> unsetOperations();
+
+        $result = $this -> body;
+        unset($this -> body);
+
+        return $result;
     }
 
     /**
@@ -75,7 +180,20 @@ class Stream implements StreamInterface
      */
     public function getSize()
     {
-        return sizeof($this -> _body);
+        if (!isset($this -> options['size'])) {
+            try {
+                $fstat = fstat($this -> body);
+                if (!isset($fstat['size'])) {
+                    return null;
+                }
+
+                $this -> options['size'] = $fstat['size'];
+            } catch (Exception $e) {
+                return null; // fails to determine the size
+            }
+        }
+
+        return $this -> options['size'];
     }
 
     /**
@@ -86,7 +204,11 @@ class Stream implements StreamInterface
      */
     public function tell()
     {
-        
+        if (!$result = ftell($this -> body)) {
+            throw new \RuntimeException("Cannot determine the file pointer position.");
+        }
+
+        return $result;
     }
 
     /**
@@ -96,7 +218,8 @@ class Stream implements StreamInterface
      */
     public function eof()
     {
-        return true;
+        // should use feof
+        return (!$this->body || feof($this->body));
     }
 
     /**
@@ -106,7 +229,7 @@ class Stream implements StreamInterface
      */
     public function isSeekable()
     {
-        return true;
+        return $this -> seekable;
     }
 
     /**
@@ -123,7 +246,13 @@ class Stream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        return true;
+        if (!$this -> isSeekable()) { 
+            throw new \RuntimeException("The stream is not seekable.");
+        }
+
+        if (fseek($this -> body, $offset, $whence) === -1) {
+            throw new \RuntimeException("Could not seek stream position.");   
+        }
     }
 
     /**
@@ -138,7 +267,7 @@ class Stream implements StreamInterface
      */
     public function rewind()
     {
-        return true;
+        $this -> seek(0);
     }
 
     /**
@@ -148,7 +277,7 @@ class Stream implements StreamInterface
      */
     public function isWritable()
     {
-        return true;
+        return $this -> writable;
     }
 
     /**
@@ -160,8 +289,16 @@ class Stream implements StreamInterface
      */
     public function write($string)
     {
-        $this -> _body = $string;
-        return sizeof($this -> _body);
+        if (!$this -> isWritable()) {
+            throw new \RuntimeException("Stream is not writable.");
+        }
+
+        $this -> options['size'] = null;
+        if (!($result = fwrite($this -> body, $string))) {
+            throw new \RuntimeException("Error while writing to stream.");
+        }
+
+        return $result;
     }
 
     /**
@@ -171,7 +308,7 @@ class Stream implements StreamInterface
      */
     public function isReadable()
     {
-        return true;
+        return $this -> readable;
     }
 
     /**
@@ -186,7 +323,11 @@ class Stream implements StreamInterface
      */
     public function read($length)
     {
-        return '';
+        if (!$this -> isReadable()) {
+            throw new \RuntimeException("The stream is not readable.");
+        }
+
+        return fread($this -> body, $length);
     }
 
     /**
@@ -198,7 +339,11 @@ class Stream implements StreamInterface
      */
     public function getContents()
     {
-        return '';
+        if (!$result = fread($this -> body, $this -> getSize())) {
+            throw new \RuntimeException("Unable to read or error while reading the stream.");
+        }
+
+        return $result;
     }
 
     /**
@@ -215,45 +360,35 @@ class Stream implements StreamInterface
      */
     public function getMetadata($key = null)
     {
-        // return stream_get_meta_data($this -> getBody())
+        if (!$key) {
+            return [];
+        }
+
+        if (isset($this -> metaData)) {
+            $meta = $this -> metaData;
+        } else {
+            $meta = stream_get_meta_data($this -> getBody());
+        }
+
+        return isset($meta[$key]) ? $meta[$key] : null;
     }
 
     /**
-     * Gets the value of _raw.
-     *
-     * @return mixed
-     */
-    public function getRaw()
-    {
-        return $this->_raw;
-    }
-
-    /**
-     * Sets the value of _raw.
-     *
-     * @param mixed $raw the raw
-     *
-     * @return self
-     */
-    protected function setRaw($raw)
-    {
-        $this->_raw = $raw;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of _body.
+     * Gets the value of body.
      *
      * @return mixed
      */
     public function getBody()
     {
-        return $this->_body;
+        if (!isset($this -> body)) {
+            return null;
+        }
+
+        return $this->body;
     }
 
     /**
-     * Sets the value of _body.
+     * Sets the value of body.
      *
      * @param mixed $body the body
      *
@@ -261,8 +396,65 @@ class Stream implements StreamInterface
      */
     protected function setBody($body)
     {
-        $this->_body = $body;
+        $this->body = $body;
 
         return $this;
+    }
+
+    /**
+     * Is the stream JSONable? 
+     *
+     * @return boolean                 
+     */
+    protected function isJsonable() {
+        $contents = $this -> getBody();
+        try {
+            $contents = json_encode($contents, JSON_PRETTY_PRINT);
+            if ($contents === null ||
+                $contents === '') {
+                return false;
+            }
+        } catch (Exception $e) { // Invalid operation
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * Refresh the stream options such as size.
+     *
+     * @param type name         description
+     * @return type                 description
+     */
+    // protected function refresh($which = null) {
+    //     if (isset($which) && null !== $which) {
+    //         $this -> 
+    //     }
+    // }
+
+    protected function setOperations() {
+        // write
+        // read
+        // seek
+        // ...
+    }
+
+    protected function unsetOperations() {
+        $this -> writable = false;
+        $this -> readable = false;
+        $this -> seekable = false;
+    }
+
+    
+
+    /**
+     * Free resources
+     *
+     * @return void                 
+     */
+    public function __destruct()
+    {
+        $this -> close();
     }
 }
