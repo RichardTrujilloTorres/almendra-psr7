@@ -15,45 +15,45 @@ class Stream implements StreamInterface
     /**
      * @var stream body / the resource
      */
-    protected $body; 
+    protected $body;
 
     /**
-     * @var The stream uri, if any 
+     * @var The stream uri, if any
      */
-    protected $uri; 
+    protected $uri;
 
     /**
-     * @var Is the stream seekable? 
+     * @var Is the stream seekable?
      */
     protected $seekable;
 
     /**
-     * @var Is the stream readable? 
+     * @var Is the stream readable?
      */
     protected $readable;
 
     /**
-     * @var Is the stream writable? 
+     * @var Is the stream writable?
      */
     protected $writable;
 
     /**
-     * @var The stream metadata, if any 
+     * @var The stream metadata, if any
      */
     protected $metaData = [];
 
     /**
-     * @var The overriding options (size, uri, etc.) 
+     * @var The overriding options (size, uri, etc.)
      */
     protected $options = [];
 
     /**
-     * @var Default output format 
+     * @var Default output format
      */
     protected $defaultFormat; // 'JSON'
 
     /**
-     * @var The accepted overriding options 
+     * @var The accepted overriding options
      */
     protected $overridingOptions = [
         'size',
@@ -61,13 +61,14 @@ class Stream implements StreamInterface
         ];
 
     /**
-     * Sets up the resource. 
+     * Sets up the resource.
      *
      * @param resource $stream
-     * @param array $options         
-     * @return void                 
+     * @param array $options
+     * @return void
      */
-    public function __construct($stream, $metaData = [], $options = []) {
+    public function __construct($stream, $metaData = [], $options = [])
+    {
         if (!is_resource($stream)) {
             throw new \InvalidArgumentException("Stream must be a resource.");
         }
@@ -83,9 +84,10 @@ class Stream implements StreamInterface
      *
      * @param resource $stream         The stream
      * @param array $userData         The overriding user metadata
-     * @return void                 
+     * @return void
      */
-    protected function setMetadata($stream, array $userData = []) {
+    protected function setMetadata($stream, array $userData = [])
+    {
         $meta = stream_get_meta_data($stream);
         $this -> metaData = array_merge($meta, $userData);
     }
@@ -94,9 +96,10 @@ class Stream implements StreamInterface
      * Sets the options such as the size, effectively overriding those from the stream.
      *
      * @param array $options         The overriding options
-     * @return void                 
+     * @return void
      */
-    protected function setOptions(array $options) {
+    protected function setOptions(array $options)
+    {
         foreach ($this -> overridingOptions as $name) {
             if (isset($options[$name])) {
                 $this -> $options[$name] = $options[$name];
@@ -127,7 +130,6 @@ class Stream implements StreamInterface
             if ($this -> isJsonable() && ($this -> defaultFormat === 'JSON')) {
                 $result = json_encode($result, JSON_PRETTY_PRINT);
             }
-
         } catch (Exception $e) {
             $result = '';
         }
@@ -246,12 +248,12 @@ class Stream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        if (!$this -> isSeekable()) { 
+        if (!$this -> isSeekable()) {
             throw new \RuntimeException("The stream is not seekable.");
         }
 
         if (fseek($this -> body, $offset, $whence) === -1) {
-            throw new \RuntimeException("Could not seek stream position.");   
+            throw new \RuntimeException("Could not seek stream position.");
         }
     }
 
@@ -402,11 +404,12 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Is the stream JSONable? 
+     * Is the stream JSONable?
      *
-     * @return boolean                 
+     * @return boolean
      */
-    protected function isJsonable() {
+    protected function isJsonable()
+    {
         $contents = $this -> getBody();
         try {
             $contents = json_encode($contents, JSON_PRETTY_PRINT);
@@ -422,7 +425,8 @@ class Stream implements StreamInterface
     }
 
 
-    protected function unsetOperations() {
+    protected function unsetOperations()
+    {
         $this -> writable = false;
         $this -> readable = false;
         $this -> seekable = false;
@@ -433,7 +437,7 @@ class Stream implements StreamInterface
     /**
      * Free resources
      *
-     * @return void                 
+     * @return void
      */
     public function __destruct()
     {

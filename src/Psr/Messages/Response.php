@@ -228,7 +228,8 @@ class Response extends Message implements ResponseInterface
         return $clone;
     }
 
-    protected function setReasonPhrase($reasonPhrase) {
+    protected function setReasonPhrase($reasonPhrase)
+    {
         $this -> _reasonPhrase = $reasonPhrase;
 
         return $this;

@@ -18,13 +18,13 @@ class ServerRequest extends Response implements RequestInterface
     // body
 
 
-    public function __construct($cookies = null, $serverParams = null) {
+    public function __construct($cookies = null, $serverParams = null)
+    {
         if (isset($cookies) && null !== $cookies) {
             $this -> setCookies($cookies);
         } else {
             $this -> setCookies($this -> getCookieParams());
         }
-        
     }
     
     /**
@@ -36,7 +36,8 @@ class ServerRequest extends Response implements RequestInterface
      *
      * @return array
      */
-    public function getServerParams() {
+    public function getServerParams()
+    {
         if (isset($_SERVER) && null !== $_SERVER) {
             $this -> _serverParams = $_SERVER;
         }
