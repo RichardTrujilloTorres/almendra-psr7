@@ -422,13 +422,6 @@ class Stream implements StreamInterface
     }
 
 
-    protected function setOperations() {
-        // write
-        // read
-        // seek
-        // ...
-    }
-
     protected function unsetOperations() {
         $this -> writable = false;
         $this -> readable = false;
