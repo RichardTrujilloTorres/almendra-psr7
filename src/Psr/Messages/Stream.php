@@ -421,17 +421,6 @@ class Stream implements StreamInterface
         return true;
     }
 
-    /**
-     * Refresh the stream options such as size.
-     *
-     * @param type name         description
-     * @return type                 description
-     */
-    // protected function refresh($which = null) {
-    //     if (isset($which) && null !== $which) {
-    //         $this -> 
-    //     }
-    // }
 
     protected function setOperations() {
         // write
