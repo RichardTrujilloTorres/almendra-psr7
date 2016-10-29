@@ -60,6 +60,22 @@ class Stream implements StreamInterface
         'uri',
         ];
 
+    /** @var array Hash of readable and writable stream types */
+    private static $readWriteHash = [
+        'read' => [
+            'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,
+            'rb' => true, 'w+b' => true, 'r+b' => true, 'x+b' => true,
+            'c+b' => true, 'rt' => true, 'w+t' => true, 'r+t' => true,
+            'x+t' => true, 'c+t' => true, 'a+' => true
+        ],
+        'write' => [
+            'w' => true, 'w+' => true, 'rw' => true, 'r+' => true, 'x+' => true,
+            'c+' => true, 'wb' => true, 'w+b' => true, 'r+b' => true,
+            'x+b' => true, 'c+b' => true, 'w+t' => true, 'r+t' => true,
+            'x+t' => true, 'c+t' => true, 'a' => true, 'a+' => true
+        ]
+    ];
+
     /**
      * Sets up the resource.
      *
@@ -73,10 +89,10 @@ class Stream implements StreamInterface
             throw new \InvalidArgumentException("Stream must be a resource.");
         }
 
-        // Attach the stream
         $this -> setBody($stream);
         $this -> setMetadata($stream, $metaData);
         $this -> setOptions($options);
+        $this -> setOperations();
     }
 
     /**
@@ -102,7 +118,7 @@ class Stream implements StreamInterface
     {
         foreach ($this -> overridingOptions as $name) {
             if (isset($options[$name])) {
-                $this -> $options[$name] = $options[$name];
+                $this -> options[$name] = $options[$name];
             }
         }
     }
@@ -126,7 +142,8 @@ class Stream implements StreamInterface
         // protect against exception
         try {
             $this -> seek(0);
-            $result = (string) stream_get_contents($this -> getBody());
+
+            $result = (string) stream_get_contents($this -> body);
             if ($this -> isJsonable() && ($this -> defaultFormat === 'JSON')) {
                 $result = json_encode($result, JSON_PRETTY_PRINT);
             }
@@ -296,7 +313,8 @@ class Stream implements StreamInterface
         }
 
         $this -> options['size'] = null;
-        if (!($result = fwrite($this -> body, $string))) {
+        $result = fwrite($this -> body, $string);
+        if (false === $result) {
             throw new \RuntimeException("Error while writing to stream.");
         }
 
@@ -424,6 +442,30 @@ class Stream implements StreamInterface
         return true;
     }
 
+    protected function getOption($name)
+    {
+        if (!isset($this -> options[$name])) {
+            try {
+                $fstat = fstat($this -> body);
+                if (!isset($fstat[$name])) {
+                    return null;
+                }
+
+                $this -> options[$name] = $fstat[$name];
+            } catch (Exception $e) {
+                return null; // fails to determine the size
+            }
+        }
+
+        return $this -> options[$name];
+    }
+
+    protected function setOperations()
+    {
+        $this -> seekable = $this -> getMetadata('seekable');
+        $this -> readable = isset(self::$readWriteHash['read'][$this -> getMetadata('mode')]);
+        $this -> writable = isset(self::$readWriteHash['write'][$this -> getMetadata('mode')]);
+    }
 
     protected function unsetOperations()
     {
@@ -431,8 +473,6 @@ class Stream implements StreamInterface
         $this -> readable = false;
         $this -> seekable = false;
     }
-
-    
 
     /**
      * Free resources
