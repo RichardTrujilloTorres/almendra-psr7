@@ -3,6 +3,8 @@
 namespace Almendra\Http\Psr\Messages;
 
 use Psr\Http\Message\StreamInterface;
+use Exception;
+
 
 /**
  * Represent a message stream
