@@ -58,7 +58,7 @@ class Server implements ServerInterface
      * Returns all values from the $_GET superglobal.
      * Null if none exists.
      *
-     * @param string $name         
+     * @param array $values         An array containing value names to be retrieved         
      * @return mixed                 
      */
     public static function gets(array $values = null)
@@ -95,7 +95,7 @@ class Server implements ServerInterface
      * Returns all values from the $_POST superglobal.
      * Null if none exists.
      *
-     * @param string $name         
+     * @param array $values         
      * @return mixed                 
      */
     public static function posts(array $values = null)
@@ -132,7 +132,7 @@ class Server implements ServerInterface
      * Returns all values from the $_FILES superglobal.
      * Null if none exists.
      *
-     * @param string $name         
+     * @param array $values         An array containing value names to be retrieved    
      * @return mixed                 
      */
     public static function files(array $values = null)
