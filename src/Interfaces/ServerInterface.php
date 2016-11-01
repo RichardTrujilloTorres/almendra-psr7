@@ -33,18 +33,44 @@ interface ServerInterface
      * Returns all values from the $_GET superglobal.
      * Null if none exists.
      *
-     * @param string $name         
+     * @param array $values         An array containing value names to be retrieved         
      * @return mixed                 
      */
     public static function gets(array $values = null);
 
+    /**
+     * Returns a value from the $_POST superglobal.
+     * Null if none exists.
+     *
+     * @param string $name         The value's name
+     * @return mixed                 
+     */
     public static function post($name);
 
+    /**
+     * Returns all values from the $_POST superglobal.
+     * Null if none exists.
+     *
+     * @param array $values         
+     * @return mixed                 
+     */
     public static function posts(array $values = null);
 
+    /**
+     * Returns a value from the $_FILES superglobal.
+     * Null if none exists.
+     *
+     * @param string $name         The value's name
+     * @return mixed                 
+     */
     public static function file($name);
 
+    /**
+     * Returns all values from the $_FILES superglobal.
+     * Null if none exists.
+     *
+     * @param array $values         An array containing value names to be retrieved    
+     * @return mixed                 
+     */
     public static function files(array $values = null);
-
-    //
 }
