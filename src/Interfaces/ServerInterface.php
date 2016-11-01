@@ -15,7 +15,6 @@ interface ServerInterface
     /**
      * Retrieves all values defined in the superglobal $_SERVER.
      *
-     * @param string $value         The key's name.
      * @return string|mixed
      */
     public static function getValues();

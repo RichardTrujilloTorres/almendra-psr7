@@ -25,44 +25,46 @@ class Stream implements StreamInterface
     protected $uri;
 
     /**
-     * @var Is the stream seekable?
+     * @var boolean Is the stream seekable?
      */
     protected $seekable;
 
     /**
-     * @var Is the stream readable?
+     * @var boolean Is the stream readable?
      */
     protected $readable;
 
     /**
-     * @var Is the stream writable?
+     * @var boolean Is the stream writable?
      */
     protected $writable;
 
     /**
-     * @var The stream metadata, if any
+     * @var array The stream metadata, if any
      */
     protected $metaData = [];
 
     /**
-     * @var The overriding options (size, uri, etc.)
+     * @var array The overriding options (size, uri, etc.)
      */
     protected $options = [];
 
     /**
-     * @var Default output format
+     * @var string Default output format
      */
     protected $defaultFormat; // 'JSON'
 
     /**
-     * @var The accepted overriding options
+     * @var array The accepted overriding options
      */
     protected $overridingOptions = [
         'size',
         'uri',
         ];
 
-    /** @var array Hash of readable and writable stream types */
+    /**
+     * @var array Hash of readable and writable stream types
+     */
     private static $readWriteHash = [
         'read' => [
             'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,
