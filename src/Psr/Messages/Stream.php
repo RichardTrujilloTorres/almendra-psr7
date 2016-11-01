@@ -85,7 +85,6 @@ class Stream implements StreamInterface
      *
      * @param resource $stream
      * @param array $options
-     * @return void
      */
     public function __construct($stream, $metaData = [], $options = [])
     {
