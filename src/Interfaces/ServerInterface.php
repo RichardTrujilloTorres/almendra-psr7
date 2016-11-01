@@ -20,13 +20,31 @@ interface ServerInterface
      */
     public static function getValues();
 
-    public function get();
+    /**
+     * Returns a value from the $_GET superglobal.
+     * Null if none exists.
+     *
+     * @param string $name         The value's name
+     * @return mixed                 
+     */
+    public static function get($name);
 
-    public function post();
+    /**
+     * Returns all values from the $_GET superglobal.
+     * Null if none exists.
+     *
+     * @param string $name         
+     * @return mixed                 
+     */
+    public static function gets(array $values = null);
 
-    public function files();
+    public static function post($name);
 
-    public function all();
+    public static function posts(array $values = null);
+
+    public static function file($name);
+
+    public static function files(array $values = null);
 
     //
 }

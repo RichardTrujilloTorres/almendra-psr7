@@ -200,12 +200,18 @@ class Request extends Message implements RequestInterface
     public function withRequestTarget($target)
     {
         $clone = clone $this;
-        $clone -> setTarget($target);
+        $clone -> setRequestTarget($target);
 
         return $clone;
     }
 
-    public function setTarget($target)
+    /**
+     * Sets the request-target.
+     *
+     * @param string $target         
+     * @return void                 
+     */
+    public function setRequestTarget($target)
     {
         $this -> _target = $target;
     }
@@ -220,6 +226,12 @@ class Request extends Message implements RequestInterface
         return $this -> _method;
     }
 
+    /**
+     * Overrides the request method.
+     *
+     * @param string $method         The HTTP method
+     * @return void                 
+     */
     public function setMethod($method)
     {
         $this -> _method = $method;
@@ -262,6 +274,12 @@ class Request extends Message implements RequestInterface
         return $this -> _Uri;
     }
 
+    /**
+     * Sets the request URI.
+     *
+     * @param UriInterface $uri         The URI
+     * @return void                 
+     */
     public function setUri(UriInterface $uri)
     {
         $this -> _Uri = $uri;
@@ -305,11 +323,23 @@ class Request extends Message implements RequestInterface
         return $clone;
     }
 
+    /**
+     * Returns all the request fields.
+     *
+     * @return mixed                 
+     */
     public function all()
     {
         return $this -> _fields;
     }
 
+    /**
+     * Returns the request field by name corresponding the to GET method.
+     * Null if none exists.
+     *
+     * @param string $name         The field's name
+     * @return mixed                 
+     */
     public function get($name)
     {
         if (isset($this -> _fields['get'][$name])) {
@@ -319,6 +349,13 @@ class Request extends Message implements RequestInterface
         return null;
     }
 
+    /**
+     * Returns the request field by name corresponding the to POST method.
+     * Null if none exists.
+     *
+     * @param string $name         The field's name
+     * @return mixed                 
+     */
     public function post($name)
     {
         if (isset($this -> _fields['post'][$name])) {
@@ -328,6 +365,13 @@ class Request extends Message implements RequestInterface
         return null;
     }
 
+    /**
+     * Returns the request field by name corresponding the to PUT method.
+     * Null if none exists.
+     *
+     * @param string $name         The field's name
+     * @return mixed                 
+     */
     public function put($name)
     {
         if (isset($this -> _fields['put'][$name])) {
@@ -337,6 +381,13 @@ class Request extends Message implements RequestInterface
         return null;
     }
 
+    /**
+     * Returns the request field by name corresponding the to DELETE method.
+     * Null if none exists.
+     *
+     * @param string $name         The field's name
+     * @return mixed                 
+     */
     public function delete($name)
     {
         if (isset($this -> _fields['delete'][$name])) {
@@ -346,6 +397,13 @@ class Request extends Message implements RequestInterface
         return null;
     }
 
+    /**
+     * Returns the request file field by name usually found thourgh the $_SERVER super-global. 
+     * Null if none exists.
+     *
+     * @param string $name         The field's name
+     * @return mixed                 
+     */
     public function files($name)
     {
         if (isset($this -> _fields['files'][$name])) {
@@ -354,6 +412,7 @@ class Request extends Message implements RequestInterface
 
         return null;
     }
+
 
     protected function fillFields($method)
     {

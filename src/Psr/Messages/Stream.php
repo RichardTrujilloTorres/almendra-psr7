@@ -444,6 +444,12 @@ class Stream implements StreamInterface
         return true;
     }
 
+    /**
+     * Returns an overriding option.
+     *
+     * @param string $name         The option name
+     * @return mixed                 
+     */
     protected function getOption($name)
     {
         if (!isset($this -> options[$name])) {
@@ -462,6 +468,11 @@ class Stream implements StreamInterface
         return $this -> options[$name];
     }
 
+    /**
+     * Set all available operations.
+     *
+     * @return void                 
+     */
     protected function setOperations()
     {
         $this -> seekable = $this -> getMetadata('seekable');
@@ -469,6 +480,11 @@ class Stream implements StreamInterface
         $this -> writable = isset(self::$readWriteHash['write'][$this -> getMetadata('mode')]);
     }
 
+    /**
+     * Unset all available operations.
+     *
+     * @return void                 
+     */
     protected function unsetOperations()
     {
         $this -> writable = false;
